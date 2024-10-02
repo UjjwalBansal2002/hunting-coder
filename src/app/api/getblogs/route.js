@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+export const dynamic = 'force-dynamic';
+
 
 export async function GET(req) {
     try {
