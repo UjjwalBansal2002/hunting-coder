@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as fs from 'fs/promises';
+export const dynamic = 'force-dynamic';
+
 
 export async function GET(request) {
     const data = await fs.readdir("blogdata","utf-8")
