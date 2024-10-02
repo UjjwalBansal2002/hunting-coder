@@ -2,7 +2,7 @@ import Link from "next/link";
 
 async function fetchBlogBySlug() {
 
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.Next_PUBLIC_BASE_API_URL;
   console.log(apiUrl)
   const res = await fetch(`${apiUrl}/api/blogs`, {
     next: { revalidate: 60 },
