@@ -3,13 +3,13 @@ import * as fs from 'fs';
 export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
-        const search = searchParams.get('search');
+        const slug = searchParams.get('slug');
 
-        if (!search) {
+        if (!slug) {
             return new Response('Search parameter is missing', { status: 400 });
         }
 
-        const data = await fs.promises.readFile(`blogdata/${search}.json`, 'utf-8');
+        const data = await fs.promises.readFile(`blogdata/${slug}.json`, 'utf-8');
         return new Response(data, { status: 200 });
     } catch (error) {
         console.error('Error reading the file:', error);

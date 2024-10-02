@@ -1,6 +1,7 @@
 
 
 export default function Home() {
+  
   return (
     <div className="grid grid-rows-[20px_1fr_20px] pt-10 justify-center min-h-screen font-[family-name:var(--font-geist-sans)]">
 

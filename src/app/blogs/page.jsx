@@ -1,20 +1,15 @@
-"use client";
-
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 
-function page() {
-  const [blogs, setblogs] = useState([]);
-  useEffect(() => {
-    console.log("hello useeffect");
-    fetch("http://localhost:3000/api/blogs")
-      .then((a) => {
-        return a.json();
-      })
-      .then((parsed) => {
-        setblogs(parsed);
-      });
-  }, []);
+async function fetchBlogBySlug() {
+  const res = await fetch(`http://localhost:3000/api/blogs`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  return res.json();
+}
+
+async function page() {
+  const blogs = await fetchBlogBySlug(); // Fetch blog data on the server
 
   return (
     <div className="blogs flex justify-center flex-col items-center">
