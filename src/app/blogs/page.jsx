@@ -2,13 +2,9 @@ import Link from "next/link";
 
 async function fetchBlogBySlug() {
 
-  const apiUrl = "http://localhost:3000";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   console.log(apiUrl)
-  const res = await fetch(`${apiUrl}/api/blogs`, {
-    next: { revalidate: 60 },
-  });
-  // const res = await fetch(`http://localhost:3000/api/blogs`);
-
+  const res = await fetch(`${apiUrl}/api/blogs`)
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
