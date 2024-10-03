@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 
 async function fetchBlogBySlug() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  console.log(apiUrl);
   if (!apiUrl) {
     throw new Error("API URL is not defined. Please check your environment variables.");
 }
@@ -29,16 +31,15 @@ function Page() {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function loadBlogs() {
-      try {
-        const data = await fetchBlogBySlug();
-        setBlogs(data);
-      } catch (error) {
-        setError('Failed to load blogs.');
-      }
+  useEffect(async () => {
+    try {
+      const data = await fetchBlogBySlug();
+      setBlogs(data);
+    } catch (error) {
+      console.error('Error loading blogs:', error); // Log the error
+      setError(error.message); // Set the error message to display
     }
-    loadBlogs();
+
   }, []);
 
   if (error) {
