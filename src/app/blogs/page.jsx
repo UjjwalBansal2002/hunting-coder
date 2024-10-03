@@ -1,40 +1,73 @@
+"use client"
+
 import Link from "next/link";
+import React from "react";
+import { useEffect, useState } from "react";
 
 async function fetchBlogBySlug() {
-
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  console.log(apiUrl)
-  const res = await fetch(`${apiUrl}/api/blogs`)
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
+  if (!apiUrl) {
+    throw new Error("API URL is not defined. Please check your environment variables.");
 }
 
-async function page() {
-  const blogs = await fetchBlogBySlug(); // Fetch blog data on the server
+  console.log('Fetching from:', apiUrl);
+
+  try {
+    const res = await fetch(`${apiUrl}/api/blogs`, { next: { revalidate: 10 } });
+    if (!res.ok) {
+      const errorDetails = await res.text();
+      throw new Error(`Failed to fetch data: ${res.status} - ${errorDetails}`);
+    }
+    return await res.json();
+  } catch (error) {
+    console.error('Error in fetch:', error);
+    throw new Error('Error fetching blogs');
+  }
+}
+
+function Page() {
+  const [blogs, setBlogs] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadBlogs() {
+      try {
+        const data = await fetchBlogBySlug();
+        setBlogs(data);
+      } catch (error) {
+        setError('Failed to load blogs.');
+      }
+    }
+    loadBlogs();
+  }, []);
+
+  if (error) {
+    return <div className="error-message text-red-600">{error}</div>;
+  }
 
   return (
     <div className="blogs flex justify-center flex-col items-center">
       <h2 className="text-3xl my-5">Popular Blogs</h2>
-      {blogs.map((blogItem) => {
-        return (
+      {blogs.length === 0 ? (
+        <p>Loading...</p>
+      ) : (
+        blogs.map((blogItem) => (
           <div
             className="blogItem bg-gray-900 p-4 cursor-pointer w-[50vw]"
-            key={blogItem.title}
+            key={blogItem.slug}
           >
             <Link href={`/blogpost/${blogItem.slug}`}>
-              <h1 className="my-2 font-semaibold text-xl">{blogItem.title}</h1>
+              <h1 className="my-2 font-semibold text-xl">{blogItem.title}</h1>
               <p className="font-medium">
                 {blogItem.description.substr(0, 200)}{" "}
                 <span className="text-blue-800">readMore...</span>
               </p>
             </Link>
           </div>
-        );
-      })}
+        ))
+      )}
     </div>
   );
 }
 
-export default page;
+export default Page;

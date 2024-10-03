@@ -1,6 +1,6 @@
 
 async function fetchBlogBySlug(slug) {
-  const res = await fetch(`http://localhost:3000/api/getblogs?slug=${slug}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getblogs?slug=${slug}`);
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
